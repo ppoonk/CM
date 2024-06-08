@@ -278,19 +278,21 @@ func loadProvider(pv provider.Provider) {
 		log.Infoln("Start initial provider %s", (pv).Name())
 	}
 
-	if err := pv.Initial(); err != nil {
-		switch pv.Type() {
-		case provider.Proxy:
-			{
-				log.Errorln("initial proxy provider %s error: %v", (pv).Name(), err)
-			}
-		case provider.Rule:
-			{
-				log.Errorln("initial rule provider %s error: %v", (pv).Name(), err)
-			}
+	go func() {
+		if err := pv.Initial(); err != nil {
+			switch pv.Type() {
+			case provider.Proxy:
+				{
+					log.Errorln("initial proxy provider %s error: %v", (pv).Name(), err)
+				}
+			case provider.Rule:
+				{
+					log.Errorln("initial rule provider %s error: %v", (pv).Name(), err)
+				}
 
+			}
 		}
-	}
+	}()
 }
 
 func loadRuleProvider(ruleProviders map[string]provider.RuleProvider) {
